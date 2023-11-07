@@ -2,10 +2,11 @@ package application
 
 import (
 	"errors"
-	"qd_email_api/internal/service/mock"
-	grpcserverMock "qd_email_api/pkg/grpcserver/mock"
-	loggerMock "qd_email_api/pkg/log/mock"
+	"qd-email-api/internal/service/mock"
 	"testing"
+
+	grpcserverMock "github.com/gustavo-m-franco/qd-common/pkg/grpcserver/mock"
+	loggerMock "github.com/gustavo-m-franco/qd-common/pkg/log/mock"
 
 	"github.com/golang/mock/gomock"
 )

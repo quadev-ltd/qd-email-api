@@ -2,10 +2,11 @@ package grpcserver
 
 import (
 	"net"
-	"qd_email_api/internal/service"
-	"qd_email_api/pb/gen/go/pb_email"
-	"qd_email_api/pkg/grpcserver"
-	"qd_email_api/pkg/log"
+	"qd-email-api/internal/service"
+	"qd-email-api/pb/gen/go/pb_email"
+
+	"github.com/gustavo-m-franco/qd-common/pkg/grpcserver"
+	"github.com/gustavo-m-franco/qd-common/pkg/log"
 
 	"google.golang.org/grpc"
 )

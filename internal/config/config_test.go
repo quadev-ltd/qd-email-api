@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"qd_email_api/pkg/config"
+	"github.com/gustavo-m-franco/qd-common/pkg/config"
 
 	"github.com/stretchr/testify/assert"
 )

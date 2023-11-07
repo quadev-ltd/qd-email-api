@@ -2,12 +2,13 @@ package application
 
 import (
 	"fmt"
-	"qd_email_api/internal/config"
-	grpcFactory "qd_email_api/internal/grpcserver"
-	"qd_email_api/internal/service"
-	"qd_email_api/pkg/grpcserver"
+	"qd-email-api/internal/config"
+	grpcFactory "qd-email-api/internal/grpcserver"
+	"qd-email-api/internal/service"
 
-	"qd_email_api/pkg/log"
+	"github.com/gustavo-m-franco/qd-common/pkg/grpcserver"
+
+	"github.com/gustavo-m-franco/qd-common/pkg/log"
 )
 
 // Applicationer provides the main functions to start the application

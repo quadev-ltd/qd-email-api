@@ -1,8 +1,8 @@
 package main
 
 import (
-	"qd_email_api/internal/application"
-	"qd_email_api/internal/config"
+	"qd-email-api/internal/application"
+	"qd-email-api/internal/config"
 )
 
 func main() {

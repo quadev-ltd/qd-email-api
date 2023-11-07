@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"qd_email_api/pb/gen/go/pb_email"
-	pkgLogger "qd_email_api/pkg/log"
+	"qd-email-api/pb/gen/go/pb_email"
 	"time"
+
+	pkgLogger "github.com/gustavo-m-franco/qd-common/pkg/log"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
