@@ -1,0 +1,9 @@
+app: QuaDevEmailTest
+grpc:
+  host: localhost
+  port: 3333
+smtp:
+  host: localhost
+  port: 1111
+  username: test@test.com
+  password: test_password
