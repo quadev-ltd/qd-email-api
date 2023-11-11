@@ -2,14 +2,13 @@ package service
 
 import (
 	"context"
-	"qd-email-api/pb/gen/go/pb_email"
 
 	"github.com/gustavo-m-franco/qd-common/pkg/log"
-
 	"golang.org/x/time/rate"
-
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+
+	"qd-email-api/pb/gen/go/pb_email"
 )
 
 // EmailServiceServer is the implementation of the authentication service
@@ -32,7 +31,7 @@ func NewEmailServiceServer(emailService EmailServicer) *EmailServiceServer {
 func (server *EmailServiceServer) SendEmail(ctx context.Context, request *pb_email.SendEmailRequest) (*pb_email.SendEmailResponse, error) {
 	logger := log.GetLoggerFromContext(ctx)
 	if logger == nil {
-		return nil, status.Errorf(codes.Internal, "Internal server error. No logger in context")
+		return nil, status.Errorf(codes.Internal, "No logger in context")
 	}
 
 	// Check the rate limit

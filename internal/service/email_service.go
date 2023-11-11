@@ -29,7 +29,6 @@ var _ EmailServicer = &EmailService{}
 
 // NewEmailService creates a new email service
 func NewEmailService(config EmailServiceConfig, sender SMTPServicer) *EmailService {
-
 	return &EmailService{
 		config: config,
 		sender: &SMTPService{},

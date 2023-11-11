@@ -3,16 +3,15 @@ package service
 import (
 	"context"
 	"errors"
-	"qd-email-api/internal/service/mock"
-	"qd-email-api/pb/gen/go/pb_email"
 	"testing"
 
 	"github.com/gustavo-m-franco/qd-common/pkg/log"
-
 	loggerMock "github.com/gustavo-m-franco/qd-common/pkg/log/mock"
-
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
+
+	"qd-email-api/internal/service/mock"
+	"qd-email-api/pb/gen/go/pb_email"
 )
 
 func TestEmailServiceServer(test *testing.T) {
@@ -34,7 +33,7 @@ func TestEmailServiceServer(test *testing.T) {
 		response, returnedError := server.SendEmail(context.Background(), sendEmailRequest)
 
 		assert.Error(test, returnedError)
-		assert.Equal(test, "rpc error: code = Internal desc = Internal server error. No logger in context", returnedError.Error())
+		assert.Equal(test, "rpc error: code = Internal desc = No logger in context", returnedError.Error())
 		assert.Nil(test, response)
 	})
 
