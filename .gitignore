@@ -35,3 +35,8 @@ config.dev.yml
 /bin/
 /pkg/
 /vendor/
+
+# Keys
+*.pem
+/certs/*
+!/certs/san.cnf

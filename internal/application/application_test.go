@@ -5,8 +5,8 @@ import (
 	"qd-email-api/internal/service/mock"
 	"testing"
 
-	grpcserverMock "github.com/gustavo-m-franco/qd-common/pkg/grpcserver/mock"
-	loggerMock "github.com/gustavo-m-franco/qd-common/pkg/log/mock"
+	grpcserverMock "github.com/quadev-ltd/qd-common/pkg/grpcserver/mock"
+	loggerMock "github.com/quadev-ltd/qd-common/pkg/log/mock"
 
 	"github.com/golang/mock/gomock"
 )

@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	"github.com/gustavo-m-franco/qd-common/pkg/log"
+	"github.com/quadev-ltd/qd-common/pkg/log"
 	"golang.org/x/time/rate"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

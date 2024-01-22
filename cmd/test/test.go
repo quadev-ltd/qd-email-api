@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"qd-email-api/pb/gen/go/pb_email"
 	"time"
 
-	pkgLogger "github.com/gustavo-m-franco/qd-common/pkg/log"
-
+	pkgLogger "github.com/quadev-ltd/qd-common/pkg/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
+
+	"qd-email-api/pb/gen/go/pb_email"
 )
 
 func contextWithCorrelationID(correlationID string) context.Context {
@@ -23,7 +23,7 @@ func contextWithCorrelationID(correlationID string) context.Context {
 
 func main() {
 	// Set up a connection to the gRPC server.
-	conn, err := grpc.Dial("localhost:8081", grpc.WithInsecure())
+	conn, err := grpc.Dial("localhost:9091", grpc.WithInsecure())
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
 	}

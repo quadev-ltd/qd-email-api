@@ -1,4 +1,5 @@
 app: AppName
+tls_enabled: true
 grpc:
   host: hast_name
   port: port_number

@@ -2,13 +2,13 @@ package application
 
 import (
 	"fmt"
+
+	"github.com/quadev-ltd/qd-common/pkg/grpcserver"
+	"github.com/quadev-ltd/qd-common/pkg/log"
+
 	"qd-email-api/internal/config"
 	grpcFactory "qd-email-api/internal/grpcserver"
 	"qd-email-api/internal/service"
-
-	"github.com/gustavo-m-franco/qd-common/pkg/grpcserver"
-
-	"github.com/gustavo-m-franco/qd-common/pkg/log"
 )
 
 // Applicationer provides the main functions to start the application
@@ -30,7 +30,11 @@ type Application struct {
 func NewApplication(config *config.Config) Applicationer {
 	logFactory := log.NewLogFactory(config.Environment)
 	logger := logFactory.NewLogger()
-
+	if config.TLSEnabled {
+		logger.Info("TLS is enabled")
+	} else {
+		logger.Info("TLS is disabled")
+	}
 	emailService, err := (&service.Factory{}).CreateService(config)
 	if err != nil {
 		logger.Error(err, "Failed to create email service")
@@ -41,6 +45,7 @@ func NewApplication(config *config.Config) Applicationer {
 		grpcServerAddress,
 		emailService,
 		logFactory,
+		config.TLSEnabled,
 	)
 	if err != nil {
 		logger.Error(err, "Failed to create grpc server: %v")
@@ -49,6 +54,7 @@ func NewApplication(config *config.Config) Applicationer {
 	return New(grpcServiceServer, grpcServerAddress, emailService, logger)
 }
 
+// New creates a new application with raw parameters
 func New(
 	grpcServiceServer grpcserver.GRPCServicer,
 	grpcServerAddress string,

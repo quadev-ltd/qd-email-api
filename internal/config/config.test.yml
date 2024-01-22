@@ -1,4 +1,5 @@
 app: QuaDevEmailTest
+tls_enabled: true
 grpc:
   host: localhost
   port: 3333

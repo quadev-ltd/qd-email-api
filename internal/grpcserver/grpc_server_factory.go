@@ -1,14 +1,13 @@
 package grpcserver
 
 import (
-	"net"
+	"github.com/quadev-ltd/qd-common/pkg/grpcserver"
+	"github.com/quadev-ltd/qd-common/pkg/log"
+	commonTLS "github.com/quadev-ltd/qd-common/pkg/tls"
+	"google.golang.org/grpc"
+
 	"qd-email-api/internal/service"
 	"qd-email-api/pb/gen/go/pb_email"
-
-	"github.com/gustavo-m-franco/qd-common/pkg/grpcserver"
-	"github.com/gustavo-m-franco/qd-common/pkg/log"
-
-	"google.golang.org/grpc"
 )
 
 // Factoryer is the interfact for creating a gRPC server
@@ -16,7 +15,8 @@ type Factoryer interface {
 	Create(
 		grpcServerAddress string,
 		authenticationService service.EmailServicer,
-		logFactory log.LogFactoryer,
+		logFactory log.Factoryer,
+		tlsEnabled bool,
 	) (grpcserver.GRPCServicer, error)
 }
 
@@ -29,18 +29,29 @@ var _ Factoryer = &Factory{}
 func (grpcServerFactory *Factory) Create(
 	grpcServerAddress string,
 	emailService service.EmailServicer,
-	logFactory log.LogFactoryer,
+	logFactory log.Factoryer,
+	tlsEnabled bool,
 ) (grpcserver.GRPCServicer, error) {
+	// TODO: Set domain info in the config file
+	const certFilePath = "certs/qd.email.api.crt"
+	const keyFilePath = "certs/qd.email.api.key"
+	// Create a listener for the gRPC server which eventually will start accepting connections when server is served
+	grpcListener, err := commonTLS.CreateTLSListener(
+		grpcServerAddress,
+		certFilePath,
+		keyFilePath,
+		tlsEnabled,
+	)
+	if err != nil {
+		return nil, err
+	}
+
 	// Create a gRPC server with a registered email service
 	emailServiceGRPCServer := service.NewEmailServiceServer(emailService)
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(log.CreateLoggerInterceptor(logFactory)),
 	)
 	pb_email.RegisterEmailServiceServer(grpcServer, emailServiceGRPCServer)
-	// Create a listener for the gRPC server which eventually will start accepting connections when server is served
-	grpcListener, err := net.Listen("tcp", grpcServerAddress)
-	if err != nil {
-		return nil, err
-	}
+
 	return grpcserver.NewGRPCService(grpcServer, grpcListener), nil
 }

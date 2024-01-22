@@ -1,0 +1,10 @@
+app: qd_email
+tls_enabled: true
+grpc:
+  host: qd.email.api
+  port: 9091
+smtp:
+  host: smtp.gmail.com
+  port: 587
+  username: quadev.ltd.10808171@gmail.com
+  password: mfybcxdrxkmtjzfa

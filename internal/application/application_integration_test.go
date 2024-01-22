@@ -8,13 +8,14 @@ import (
 	"testing"
 	"time"
 
-	pkgConfig "github.com/gustavo-m-franco/qd-common/pkg/config"
-	pkgLogger "github.com/gustavo-m-franco/qd-common/pkg/log"
 	"github.com/mhale/smtpd"
+	pkgConfig "github.com/quadev-ltd/qd-common/pkg/config"
+	pkgLogger "github.com/quadev-ltd/qd-common/pkg/log"
+	commonTLS "github.com/quadev-ltd/qd-common/pkg/tls"
+	commonUtil "github.com/quadev-ltd/qd-common/pkg/util"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/stretchr/testify/assert"
-	"google.golang.org/grpc"
 
 	"qd-email-api/internal/config"
 	pb_email "qd-email-api/pb/gen/go/pb_email"
@@ -86,11 +87,19 @@ func TestEmailMicroService(t *testing.T) {
 	body := "Test Body"
 	correlationID := "1234567890"
 
-	zerolog.SetGlobalLevel(zerolog.Disabled)
+	zerolog.SetGlobalLevel(zerolog.DebugLevel)
 	os.Setenv(pkgConfig.AppEnvironmentKey, "test")
 
+	// Save current working directory and change it
+	originalWD, err := commonUtil.ChangeCurrentWorkingDirectory("../..")
+	if err != nil {
+		t.Fatalf("Failed to change working directory: %s", err)
+	}
+	// Defer the reset of the working directory
+	defer os.Chdir(*originalWD)
+
 	var config config.Config
-	config.Load("../../internal/config")
+	config.Load("internal/config")
 	config.SMTP.Port = "9999"
 
 	smtpServer := startMockSMTPServer(config.SMTP.Host, config.SMTP.Port)
@@ -105,12 +114,12 @@ func TestEmailMicroService(t *testing.T) {
 	waitForServerUp(application)
 
 	t.Run("SendEmail_Success", func(t *testing.T) {
-		connection, err := grpc.Dial(application.GetGRPCServerAddress(), grpc.WithInsecure())
+		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), config.TLSEnabled)
 		assert.NoError(t, err)
 
 		client := pb_email.NewEmailServiceClient(connection)
 		ctx := context.Background()
-		registerResponse, err := client.SendEmail(
+		sendEmailResponse, err := client.SendEmail(
 			pkgLogger.AddCorrelationIDToContext(ctx, correlationID),
 			&pb_email.SendEmailRequest{
 				To:      email,
@@ -119,12 +128,12 @@ func TestEmailMicroService(t *testing.T) {
 			})
 
 		assert.NoError(t, err)
-		assert.Equal(t, "Email sent", registerResponse.Message)
-		assert.True(t, registerResponse.Success)
+		assert.Equal(t, "Email sent", sendEmailResponse.Message)
+		assert.True(t, sendEmailResponse.Success)
 	})
 
 	t.Run("SendEmail_Email_Not_Sent_Error", func(t *testing.T) {
-		connection, err := grpc.Dial(application.GetGRPCServerAddress(), grpc.WithInsecure())
+		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), config.TLSEnabled)
 		assert.NoError(t, err)
 
 		client := pb_email.NewEmailServiceClient(connection)
@@ -143,7 +152,7 @@ func TestEmailMicroService(t *testing.T) {
 	})
 
 	t.Run("SendEmail_Email_Error_Missing_Correlation_ID", func(t *testing.T) {
-		connection, err := grpc.Dial(application.GetGRPCServerAddress(), grpc.WithInsecure())
+		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), config.TLSEnabled)
 		assert.NoError(t, err)
 
 		client := pb_email.NewEmailServiceClient(connection)
@@ -157,7 +166,7 @@ func TestEmailMicroService(t *testing.T) {
 			})
 
 		assert.Error(t, err)
-		assert.Equal(t, "rpc error: code = Internal desc = Internal server error. Dubious request", err.Error())
+		assert.Equal(t, "rpc error: code = Unknown desc = Correlation ID not found in metadata", err.Error())
 		assert.Nil(t, registerResponse)
 	})
 }
