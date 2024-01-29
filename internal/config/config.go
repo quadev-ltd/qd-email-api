@@ -26,10 +26,10 @@ type smtp struct {
 type Config struct {
 	Verbose     bool
 	Environment string
+	TLSEnabled  bool `mapstructure:"tls_enabled"`
 	App         string
 	SMTP        smtp
 	GRPC        address
-	TLSEnabled  bool `mapstructure:"tls_enabled"`
 }
 
 // Load loads the configuration from the given path yml file
