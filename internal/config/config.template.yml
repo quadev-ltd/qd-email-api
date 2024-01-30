@@ -1,10 +1,8 @@
-app: AppName
-tls_enabled: true
-grpc:
-  host: hast_name
-  port: port_number
 smtp:
   host: smtp.host
   port: 111
   username: example@email.com
   password: email-password
+aws:
+  aws_key: aws_key
+  aws_secret: aws_secret

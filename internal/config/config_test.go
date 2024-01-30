@@ -26,14 +26,12 @@ func TestLoad(t *testing.T) {
 		assert.NoError(t, err, "expected no error from Load")
 
 		// Assertions
-		assert.Equal(t, "QuaDevEmailTest", cfg.App)
 		assert.Equal(t, "localhost", cfg.SMTP.Host)
-		assert.Equal(t, "1111", cfg.SMTP.Port)
+		assert.Equal(t, "9999", cfg.SMTP.Port)
 		assert.Equal(t, "test@test.com", cfg.SMTP.Username)
 		assert.Equal(t, "test_password", cfg.SMTP.Password)
-		assert.Equal(t, "localhost", cfg.GRPC.Host)
-		assert.Equal(t, "3333", cfg.GRPC.Port)
-		assert.Equal(t, true, cfg.TLSEnabled)
+		assert.Equal(t, "aws_key", cfg.AWS.Key)
+		assert.Equal(t, "aws_secret", cfg.AWS.Secret)
 
 		assert.False(t, cfg.Verbose)
 		assert.Equal(t, "test", cfg.Environment)
@@ -44,13 +42,12 @@ func TestLoad(t *testing.T) {
 		cfg := &Config{}
 		os.Setenv(config.AppEnvironmentKey, "test")
 		os.Setenv(config.VerboseKey, "false")
-		os.Setenv("TEST_ENV_APP", "QuaDevEmailTest_env")
 		os.Setenv("TEST_ENV_SMTP_HOST", "localhost_env")
 		os.Setenv("TEST_ENV_SMTP_PORT", "1111_env")
 		os.Setenv("TEST_ENV_SMTP_USERNAME", "test_env@test.com")
 		os.Setenv("TEST_ENV_SMTP_PASSWORD", "test_password_env")
-		os.Setenv("TEST_ENV_GRPC_HOST", "localhost_env")
-		os.Setenv("TEST_ENV_GRPC_PORT", "3333_env")
+		os.Setenv("TEST_ENV_AWS_KEY", "aws_key_env")
+		os.Setenv("TEST_ENV_AWS_SECRET", "aws_secret_env")
 
 		defer os.Unsetenv(config.AppEnvironmentKey)
 		defer os.Unsetenv(config.VerboseKey)
@@ -58,20 +55,19 @@ func TestLoad(t *testing.T) {
 		defer os.Unsetenv("TEST_ENV_SMTP_PORT")
 		defer os.Unsetenv("TEST_ENV_SMTP_USERNAME")
 		defer os.Unsetenv("TEST_ENV_SMTP_PASSWORD")
-		defer os.Unsetenv("TEST_ENV_GRPC_HOST")
-		defer os.Unsetenv("TEST_ENV_GRPC_PORT")
+		defer os.Unsetenv("TEST_ENV_AWS_KEY")
+		defer os.Unsetenv("TEST_ENV_AWS_SECRET")
 
 		err := cfg.Load(MockConfigPath)
 		assert.NoError(t, err, "expected no error from Load")
 
 		// Assertions
-		assert.Equal(t, "QuaDevEmailTest_env", cfg.App)
 		assert.Equal(t, "localhost_env", cfg.SMTP.Host)
 		assert.Equal(t, "1111_env", cfg.SMTP.Port)
 		assert.Equal(t, "test_env@test.com", cfg.SMTP.Username)
 		assert.Equal(t, "test_password_env", cfg.SMTP.Password)
-		assert.Equal(t, "localhost_env", cfg.GRPC.Host)
-		assert.Equal(t, "3333_env", cfg.GRPC.Port)
+		assert.Equal(t, "aws_key_env", cfg.AWS.Key)
+		assert.Equal(t, "aws_secret_env", cfg.AWS.Secret)
 
 		assert.False(t, cfg.Verbose)
 		assert.Equal(t, "test", cfg.Environment)

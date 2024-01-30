@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/mhale/smtpd"
-	pkgConfig "github.com/quadev-ltd/qd-common/pkg/config"
-	pkgLogger "github.com/quadev-ltd/qd-common/pkg/log"
+	commonConfig "github.com/quadev-ltd/qd-common/pkg/config"
+	commonLogger "github.com/quadev-ltd/qd-common/pkg/log"
 	commonTLS "github.com/quadev-ltd/qd-common/pkg/tls"
 	commonUtil "github.com/quadev-ltd/qd-common/pkg/util"
 	"github.com/rs/zerolog"
@@ -88,7 +88,7 @@ func TestEmailMicroService(t *testing.T) {
 	correlationID := "1234567890"
 
 	zerolog.SetGlobalLevel(zerolog.DebugLevel)
-	os.Setenv(pkgConfig.AppEnvironmentKey, "test")
+	os.Setenv(commonConfig.AppEnvironmentKey, "test")
 
 	// Save current working directory and change it
 	originalWD, err := commonUtil.ChangeCurrentWorkingDirectory("../..")
@@ -100,12 +100,24 @@ func TestEmailMicroService(t *testing.T) {
 
 	var config config.Config
 	config.Load("internal/config")
-	config.SMTP.Port = "9999"
+
+	centralConfig := commonConfig.Config{
+		TLSEnabled:                true,
+		EmailVerificationEndpoint: "http://localhost:2222/",
+		EmailService: commonConfig.Address{
+			Host: "qd.email.api",
+			Port: "1111",
+		},
+		AuthenticationService: commonConfig.Address{
+			Host: "qd.authentication.api",
+			Port: "3333",
+		},
+	}
 
 	smtpServer := startMockSMTPServer(config.SMTP.Host, config.SMTP.Port)
 	defer smtpServer.Close()
 
-	application := NewApplication(&config)
+	application := NewApplication(&config, &centralConfig)
 	go func() {
 		application.StartServer()
 	}()
@@ -114,13 +126,13 @@ func TestEmailMicroService(t *testing.T) {
 	waitForServerUp(application)
 
 	t.Run("SendEmail_Success", func(t *testing.T) {
-		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), config.TLSEnabled)
+		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), centralConfig.TLSEnabled)
 		assert.NoError(t, err)
 
 		client := pb_email.NewEmailServiceClient(connection)
 		ctx := context.Background()
 		sendEmailResponse, err := client.SendEmail(
-			pkgLogger.AddCorrelationIDToContext(ctx, correlationID),
+			commonLogger.AddCorrelationIDToOutgoingContext(ctx, correlationID),
 			&pb_email.SendEmailRequest{
 				To:      email,
 				Subject: subject,
@@ -133,13 +145,13 @@ func TestEmailMicroService(t *testing.T) {
 	})
 
 	t.Run("SendEmail_Email_Not_Sent_Error", func(t *testing.T) {
-		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), config.TLSEnabled)
+		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), centralConfig.TLSEnabled)
 		assert.NoError(t, err)
 
 		client := pb_email.NewEmailServiceClient(connection)
 		ctx := context.Background()
 		registerResponse, err := client.SendEmail(
-			pkgLogger.AddCorrelationIDToContext(ctx, correlationID),
+			commonLogger.AddCorrelationIDToOutgoingContext(ctx, correlationID),
 			&pb_email.SendEmailRequest{
 				To:      wrongEmail,
 				Subject: subject,
@@ -152,7 +164,7 @@ func TestEmailMicroService(t *testing.T) {
 	})
 
 	t.Run("SendEmail_Email_Error_Missing_Correlation_ID", func(t *testing.T) {
-		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), config.TLSEnabled)
+		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), centralConfig.TLSEnabled)
 		assert.NoError(t, err)
 
 		client := pb_email.NewEmailServiceClient(connection)

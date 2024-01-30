@@ -3,6 +3,7 @@ package application
 import (
 	"fmt"
 
+	commonConfig "github.com/quadev-ltd/qd-common/pkg/config"
 	"github.com/quadev-ltd/qd-common/pkg/grpcserver"
 	"github.com/quadev-ltd/qd-common/pkg/log"
 
@@ -27,10 +28,10 @@ type Application struct {
 }
 
 // NewApplication creates a new application
-func NewApplication(config *config.Config) Applicationer {
+func NewApplication(config *config.Config, centralConfig *commonConfig.Config) Applicationer {
 	logFactory := log.NewLogFactory(config.Environment)
 	logger := logFactory.NewLogger()
-	if config.TLSEnabled {
+	if centralConfig.TLSEnabled {
 		logger.Info("TLS is enabled")
 	} else {
 		logger.Info("TLS is disabled")
@@ -40,12 +41,16 @@ func NewApplication(config *config.Config) Applicationer {
 		logger.Error(err, "Failed to create email service")
 	}
 
-	grpcServerAddress := fmt.Sprintf("%s:%s", config.GRPC.Host, config.GRPC.Port)
+	grpcServerAddress := fmt.Sprintf(
+		"%s:%s",
+		centralConfig.EmailService.Host,
+		centralConfig.EmailService.Port,
+	)
 	grpcServiceServer, err := (&grpcFactory.Factory{}).Create(
 		grpcServerAddress,
 		emailService,
 		logFactory,
-		config.TLSEnabled,
+		centralConfig.TLSEnabled,
 	)
 	if err != nil {
 		logger.Error(err, "Failed to create grpc server: %v")

@@ -5,7 +5,8 @@ import (
 	"os"
 	"strings"
 
-	pkgConfig "github.com/quadev-ltd/qd-common/pkg/config"
+	commonAWS "github.com/quadev-ltd/qd-common/pkg/aws"
+	commonConfig "github.com/quadev-ltd/qd-common/pkg/config"
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/viper"
 )
@@ -26,19 +27,17 @@ type smtp struct {
 type Config struct {
 	Verbose     bool
 	Environment string
-	TLSEnabled  bool `mapstructure:"tls_enabled"`
-	App         string
 	SMTP        smtp
-	GRPC        address
+	AWS         commonAWS.AWSConfig
 }
 
 // Load loads the configuration from the given path yml file
 func (config *Config) Load(path string) error {
-	env := os.Getenv(pkgConfig.AppEnvironmentKey)
+	env := os.Getenv(commonConfig.AppEnvironmentKey)
 	if env == "" {
-		env = pkgConfig.LocalEnvironment
+		env = commonConfig.LocalEnvironment
 	}
-	config.Environment = os.Getenv(pkgConfig.AppEnvironmentKey)
+	config.Environment = os.Getenv(commonConfig.AppEnvironmentKey)
 
 	// Set the file name of the configurations file (if any)
 	viper.SetConfigName(fmt.Sprintf("config.%s", env))
@@ -60,7 +59,7 @@ func (config *Config) Load(path string) error {
 	if err := viper.Unmarshal(&config); err != nil {
 		return fmt.Errorf("Error unmarshaling configuration: %v", err)
 	}
-	if os.Getenv(pkgConfig.VerboseKey) == "true" {
+	if os.Getenv(commonConfig.VerboseKey) == "true" {
 		config.Verbose = true
 	} else {
 		config.Verbose = false
