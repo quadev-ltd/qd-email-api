@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	commontConfig "github.com/quadev-ltd/qd-common/pkg/config"
 
 	"qd-email-api/internal/application"
@@ -11,7 +13,10 @@ func main() {
 
 	var configurations config.Config
 	configLocation := "./internal/config"
-	configurations.Load(configLocation)
+	err := configurations.Load(configLocation)
+	if err != nil {
+		log.Fatalln("Failed loading the configurations", err)
+	}
 
 	var centralConfig commontConfig.Config
 	centralConfig.Load(
