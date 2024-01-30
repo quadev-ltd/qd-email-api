@@ -4,5 +4,5 @@ smtp:
   username: example@email.com
   password: email-password
 aws:
-  aws_key: aws_key
-  aws_secret: aws_secret
+  key: key
+  secret: secret

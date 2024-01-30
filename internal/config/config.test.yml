@@ -4,5 +4,5 @@ smtp:
   username: test@test.com
   password: test_password
 aws:
-  key: aws_key
-  secret: aws_secret
+  key: key
+  secret: secret

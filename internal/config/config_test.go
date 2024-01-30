@@ -30,8 +30,8 @@ func TestLoad(t *testing.T) {
 		assert.Equal(t, "9999", cfg.SMTP.Port)
 		assert.Equal(t, "test@test.com", cfg.SMTP.Username)
 		assert.Equal(t, "test_password", cfg.SMTP.Password)
-		assert.Equal(t, "aws_key", cfg.AWS.Key)
-		assert.Equal(t, "aws_secret", cfg.AWS.Secret)
+		assert.Equal(t, "key", cfg.AWS.Key)
+		assert.Equal(t, "secret", cfg.AWS.Secret)
 
 		assert.False(t, cfg.Verbose)
 		assert.Equal(t, "test", cfg.Environment)
@@ -46,8 +46,8 @@ func TestLoad(t *testing.T) {
 		os.Setenv("TEST_ENV_SMTP_PORT", "1111_env")
 		os.Setenv("TEST_ENV_SMTP_USERNAME", "test_env@test.com")
 		os.Setenv("TEST_ENV_SMTP_PASSWORD", "test_password_env")
-		os.Setenv("TEST_ENV_AWS_KEY", "aws_key_env")
-		os.Setenv("TEST_ENV_AWS_SECRET", "aws_secret_env")
+		os.Setenv("TEST_ENV_AWS_KEY", "key_env")
+		os.Setenv("TEST_ENV_AWS_SECRET", "secret_env")
 
 		defer os.Unsetenv(config.AppEnvironmentKey)
 		defer os.Unsetenv(config.VerboseKey)
@@ -66,8 +66,8 @@ func TestLoad(t *testing.T) {
 		assert.Equal(t, "1111_env", cfg.SMTP.Port)
 		assert.Equal(t, "test_env@test.com", cfg.SMTP.Username)
 		assert.Equal(t, "test_password_env", cfg.SMTP.Password)
-		assert.Equal(t, "aws_key_env", cfg.AWS.Key)
-		assert.Equal(t, "aws_secret_env", cfg.AWS.Secret)
+		assert.Equal(t, "key_env", cfg.AWS.Key)
+		assert.Equal(t, "secret_env", cfg.AWS.Secret)
 
 		assert.False(t, cfg.Verbose)
 		assert.Equal(t, "test", cfg.Environment)
