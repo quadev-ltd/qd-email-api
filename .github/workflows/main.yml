@@ -44,35 +44,12 @@ jobs:
         run: |
           cd certs
           echo "${{ secrets.CA_PEM }}" | base64 -d > ca.pem
-          echo "${{ secrets.QD_AUTHENTICATION_API_CRT }}" | base64 -d > qd.authentication.api.crt
-          echo "${{ secrets.QD_AUTHENTICATION_API_KEY }}" | base64 -d > qd.authentication.api.key
           echo "${{ secrets.QD_EMAIL_API_CRT }}" | base64 -d > qd.email.api.crt
           echo "${{ secrets.QD_EMAIL_API_KEY }}" | base64 -d > qd.email.api.key
           cd -
 
-      # Manually start MongoDB
-      - name: Download MongoDB
-        run: |
-          wget https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu2004-${{ env.MONGO_DB_VERSION }}.tgz -O /tmp/mongodb.tgz
-          tar -xzf /tmp/mongodb.tgz -C /tmp
-          echo "MONGODB_BIN=/tmp/mongodb-linux-x86_64-ubuntu2004-${{ env.MONGO_DB_VERSION }}/bin" >> $GITHUB_ENV
-
-      - name: Make MongoDB Binary Executable
-        run: chmod +x $MONGODB_BIN/mongod
-      
-      - name: Start MongoDB
-        run: |
-          mkdir /tmp/mongodb-data
-          $MONGODB_BIN/mongod --dbpath /tmp/mongodb-data --port 27017 --fork --syslog
-          until nc -z localhost 27017; do
-            echo "Waiting for MongoDB to start..."
-            sleep 1
-          done
-          echo "MongoDB started"
-
       - name: Modify /etc/hosts
         run: |
-          echo "127.0.0.1 qd.authentication.api" | sudo tee -a /etc/hosts
           echo "127.0.0.1 qd.email.api" | sudo tee -a /etc/hosts
 
       - name: Run Unit Tests
