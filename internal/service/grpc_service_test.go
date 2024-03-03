@@ -25,15 +25,13 @@ func TestEmailServiceServer(test *testing.T) {
 		defer controller.Finish()
 
 		emailServiceMock := mock.NewMockEmailServicer(controller)
-		// loggerMock := loggerMock.NewMockLoggerer(controller)
-		// ctx := context.WithValue(context.Background(), log.LoggerKey, loggerMock)
 
 		server := NewEmailServiceServer(emailServiceMock)
 
 		response, returnedError := server.SendEmail(context.Background(), sendEmailRequest)
 
 		assert.Error(test, returnedError)
-		assert.Equal(test, "rpc error: code = Internal desc = No logger in context", returnedError.Error())
+		assert.Equal(test, "Logger not found in context", returnedError.Error())
 		assert.Nil(test, response)
 	})
 
