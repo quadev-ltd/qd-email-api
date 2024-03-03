@@ -88,6 +88,8 @@ github.com/quadev-ltd/qd-common v0.0.27 h1:oawU1F3iqK6bHK5gjWYPqE7gPJiJVwWg82R5m
 github.com/quadev-ltd/qd-common v0.0.27/go.mod h1:sunwGB8LaO/71HhiqVdtukaDux0mDxyxrAJE0CeY7Oc=
 github.com/quadev-ltd/qd-common v0.0.28 h1:aBhhvtxOK5nx9AFUYK/AdrbJDWIoksxLVwlsVBc5zKA=
 github.com/quadev-ltd/qd-common v0.0.28/go.mod h1:sunwGB8LaO/71HhiqVdtukaDux0mDxyxrAJE0CeY7Oc=
+github.com/quadev-ltd/qd-common v0.0.31 h1:r1IziLOHEA4zclHxCbMPrMaoWaUpzQKrJH/fc+Ce2pA=
+github.com/quadev-ltd/qd-common v0.0.31/go.mod h1:sunwGB8LaO/71HhiqVdtukaDux0mDxyxrAJE0CeY7Oc=
 github.com/rogpeppe/go-internal v1.9.0 h1:73kH8U+JUqXU8lRuOHeVHaa/SZPifC7BkcraZVejAe8=
 github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/fJaraNFVN+nFs=
 github.com/rs/xid v1.5.0/go.mod h1:trrq9SKmegXys3aeAKXMUTdJsYXVwGY3RLcfgqegfbg=

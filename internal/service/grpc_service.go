@@ -29,9 +29,9 @@ func NewEmailServiceServer(emailService EmailServicer) *EmailServiceServer {
 
 // SendEmail sends an email
 func (server *EmailServiceServer) SendEmail(ctx context.Context, request *pb_email.SendEmailRequest) (*pb_email.SendEmailResponse, error) {
-	logger := log.GetLoggerFromContext(ctx)
-	if logger == nil {
-		return nil, status.Errorf(codes.Internal, "No logger in context")
+	logger, err := log.GetLoggerFromContext(ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	// Check the rate limit
@@ -41,7 +41,7 @@ func (server *EmailServiceServer) SendEmail(ctx context.Context, request *pb_ema
 	}
 
 	// Send the email
-	err := server.emailService.SendEmail(ctx, request.To, request.Subject, request.Body)
+	err = server.emailService.SendEmail(ctx, request.To, request.Subject, request.Body)
 	if err != nil {
 		logger.Error(err, "Error sending email")
 		return nil, status.Errorf(codes.Internal, "Error sending email")
