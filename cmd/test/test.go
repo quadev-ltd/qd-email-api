@@ -6,11 +6,10 @@ import (
 	"log"
 	"time"
 
+	"github.com/quadev-ltd/qd-common/pb/gen/go/pb_email"
 	pkgLogger "github.com/quadev-ltd/qd-common/pkg/log"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-
-	"qd-email-api/pb/gen/go/pb_email"
 )
 
 func contextWithCorrelationID(correlationID string) context.Context {

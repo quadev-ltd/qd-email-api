@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/mhale/smtpd"
+	commonPB "github.com/quadev-ltd/qd-common/pb/gen/go/pb_email"
 	commonConfig "github.com/quadev-ltd/qd-common/pkg/config"
 	commonLogger "github.com/quadev-ltd/qd-common/pkg/log"
 	commonTLS "github.com/quadev-ltd/qd-common/pkg/tls"
@@ -18,7 +19,6 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	"qd-email-api/internal/config"
-	pb_email "qd-email-api/pb/gen/go/pb_email"
 )
 
 func isServerUp(addr string) bool {
@@ -129,11 +129,11 @@ func TestEmailMicroService(t *testing.T) {
 		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), centralConfig.TLSEnabled)
 		assert.NoError(t, err)
 
-		client := pb_email.NewEmailServiceClient(connection)
+		client := commonPB.NewEmailServiceClient(connection)
 		ctx := context.Background()
 		sendEmailResponse, err := client.SendEmail(
 			commonLogger.AddCorrelationIDToOutgoingContext(ctx, correlationID),
-			&pb_email.SendEmailRequest{
+			&commonPB.SendEmailRequest{
 				To:      email,
 				Subject: subject,
 				Body:    body,
@@ -148,11 +148,11 @@ func TestEmailMicroService(t *testing.T) {
 		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), centralConfig.TLSEnabled)
 		assert.NoError(t, err)
 
-		client := pb_email.NewEmailServiceClient(connection)
+		client := commonPB.NewEmailServiceClient(connection)
 		ctx := context.Background()
 		registerResponse, err := client.SendEmail(
 			commonLogger.AddCorrelationIDToOutgoingContext(ctx, correlationID),
-			&pb_email.SendEmailRequest{
+			&commonPB.SendEmailRequest{
 				To:      wrongEmail,
 				Subject: subject,
 				Body:    body,
@@ -167,11 +167,11 @@ func TestEmailMicroService(t *testing.T) {
 		connection, err := commonTLS.CreateGRPCConnection(application.GetGRPCServerAddress(), centralConfig.TLSEnabled)
 		assert.NoError(t, err)
 
-		client := pb_email.NewEmailServiceClient(connection)
+		client := commonPB.NewEmailServiceClient(connection)
 		ctx := context.Background()
 		registerResponse, err := client.SendEmail(
 			ctx,
-			&pb_email.SendEmailRequest{
+			&commonPB.SendEmailRequest{
 				To:      wrongEmail,
 				Subject: subject,
 				Body:    body,

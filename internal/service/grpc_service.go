@@ -3,12 +3,11 @@ package service
 import (
 	"context"
 
+	"github.com/quadev-ltd/qd-common/pb/gen/go/pb_email"
 	"github.com/quadev-ltd/qd-common/pkg/log"
 	"golang.org/x/time/rate"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-
-	"qd-email-api/pb/gen/go/pb_email"
 )
 
 // EmailServiceServer is the implementation of the authentication service

@@ -6,12 +6,12 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
+	"github.com/quadev-ltd/qd-common/pb/gen/go/pb_email"
 	"github.com/quadev-ltd/qd-common/pkg/log"
 	loggerMock "github.com/quadev-ltd/qd-common/pkg/log/mock"
 	"github.com/stretchr/testify/assert"
 
 	"qd-email-api/internal/service/mock"
-	"qd-email-api/pb/gen/go/pb_email"
 )
 
 func TestEmailServiceServer(test *testing.T) {
