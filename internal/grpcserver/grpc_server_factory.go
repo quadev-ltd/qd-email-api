@@ -1,13 +1,13 @@
 package grpcserver
 
 import (
+	commonPB "github.com/quadev-ltd/qd-common/pb/gen/go/pb_email"
 	"github.com/quadev-ltd/qd-common/pkg/grpcserver"
 	"github.com/quadev-ltd/qd-common/pkg/log"
 	commonTLS "github.com/quadev-ltd/qd-common/pkg/tls"
 	"google.golang.org/grpc"
 
 	"qd-email-api/internal/service"
-	"qd-email-api/pb/gen/go/pb_email"
 )
 
 // Factoryer is the interfact for creating a gRPC server
@@ -51,7 +51,7 @@ func (grpcServerFactory *Factory) Create(
 	grpcServer := grpc.NewServer(
 		grpc.UnaryInterceptor(log.CreateLoggerInterceptor(logFactory)),
 	)
-	pb_email.RegisterEmailServiceServer(grpcServer, emailServiceGRPCServer)
+	commonPB.RegisterEmailServiceServer(grpcServer, emailServiceGRPCServer)
 
 	return grpcserver.NewGRPCService(grpcServer, grpcListener), nil
 }
