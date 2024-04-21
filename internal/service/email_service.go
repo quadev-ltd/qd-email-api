@@ -37,10 +37,13 @@ func NewEmailService(config EmailServiceConfig, sender SMTPServicer) *EmailServi
 
 // SendEmail sends an email to a single destination
 func (service *EmailService) SendEmail(_ context.Context, dest, subject, body string) error {
+	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n"
 	message := "From: " + service.config.From + "\n" +
 		"To: " + dest + "\n" +
-		"Subject: " + subject + "\n\n" +
+		"Subject: " + subject + "\n" +
+		mime + "\n" +
 		body
+
 	config := service.config
 	auth := smtp.PlainAuth("", config.From, config.Password, config.Host)
 	resultError := smtp.SendMail(
