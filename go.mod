@@ -5,7 +5,7 @@ go 1.21.2
 require (
 	github.com/golang/mock v1.6.0
 	github.com/mhale/smtpd v0.8.0
-	github.com/quadev-ltd/qd-common v0.0.46
+	github.com/quadev-ltd/qd-common v0.0.60
 	github.com/rs/zerolog v1.31.0
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/time v0.5.0
