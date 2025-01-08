@@ -8,14 +8,12 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-type address struct {
-	Host string
-	Port string
-}
-
+// smtp is the configuration of the smtp server
 type smtp struct {
 	Host     string
 	Port     string
+	From     string
+	Domain   string
 	Username string
 	Password string
 }

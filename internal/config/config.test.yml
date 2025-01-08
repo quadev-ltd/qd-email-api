@@ -1,7 +1,9 @@
 smtp:
   host: localhost
   port: 9999
-  username: test@test.com
+  from: noreply
+  domain: test.com
+  username: username
   password: test_password
 aws:
   key: key

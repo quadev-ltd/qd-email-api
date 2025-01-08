@@ -36,7 +36,7 @@ func NewApplication(config *config.Config, centralConfig *commonConfig.Config) A
 	} else {
 		logger.Info("TLS is disabled")
 	}
-	emailService, err := (&service.Factory{}).CreateService(config)
+	emailService, err := (&service.Factory{}).CreateService(config, centralConfig)
 	if err != nil {
 		logger.Error(err, "Failed to create email service")
 	}
