@@ -9,6 +9,9 @@ import (
 // EmailServiceConfig constains the configuration for the email service
 type EmailServiceConfig struct {
 	From     string
+	Domain   string
+	AppName  string
+	Username string
 	Password string
 	Host     string
 	Port     string
@@ -37,18 +40,23 @@ func NewEmailService(config EmailServiceConfig, sender SMTPServicer) *EmailServi
 
 // SendEmail sends an email to a single destination
 func (service *EmailService) SendEmail(_ context.Context, dest, subject, body string) error {
+	config := service.config
 	mime := "MIME-version: 1.0;\nContent-Type: text/html; charset=\"UTF-8\";\n"
-	message := "From: " + service.config.From + "\n" +
+	from := fmt.Sprintf("\"%s\" <%s@%s>", config.AppName, config.From, config.Domain)
+	message := "From: " + from + "\n" +
 		"To: " + dest + "\n" +
 		"Subject: " + subject + "\n" +
 		mime + "\n" +
 		body
 
-	config := service.config
-	auth := smtp.PlainAuth("", config.From, config.Password, config.Host)
+	envelopeFrom := fmt.Sprintf("%s@%s", config.From, config.Domain)
+	auth := smtp.PlainAuth("", config.Username, config.Password, config.Host)
 	resultError := smtp.SendMail(
 		fmt.Sprintf("%s:%s", config.Host, config.Port),
 		auth,
-		config.From, []string{dest}, []byte(message))
+		envelopeFrom,
+		[]string{dest},
+		[]byte(message),
+	)
 	return resultError
 }
