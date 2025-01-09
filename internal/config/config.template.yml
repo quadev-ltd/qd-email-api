@@ -1,6 +1,8 @@
 smtp:
   host: smtp.host
   port: 111
+  domain: quadev.net
+  from: no.reply
   username: example@email.com
   password: email-password
 aws:
