@@ -29,7 +29,7 @@ jobs:
       - name: Run Go Lint
         run: golint ./...
 
-      - name: Add dertificates
+      - name: Add certificates
         run: |
           cd certs
           echo "${{ secrets.CA_PEM }}" | base64 -d > ca.pem
